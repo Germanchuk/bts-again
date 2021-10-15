@@ -5,7 +5,7 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors')
 
-mongoose.connect(process.env.DATABASE_URL, {
+mongoose.connect('mongodb+srv://vova:dj559526@cluster0.dde64.mongodb.net/songs', {
 	useNewUrlParser: true,
 })
 
