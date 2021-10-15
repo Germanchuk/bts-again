@@ -1,0 +1,67 @@
+const express = require('express');
+const router = express.Router();
+const Song = require('../models/song')
+
+// Getting all
+router.get('/', async (req, res) => {
+	try {
+		const songs = await Song.find();
+		res.json(songs);
+	} catch (e) {
+		res.status(404).json({ message: e.message });
+	}
+})
+// Getting one
+router.get('/:id', getSong, (req, res) => {
+	res.send(res.song);
+})
+// Creating one
+router.post('/', async (req, res) => {
+	const song = new Song({
+		name: req.body.name,
+	});
+	try {
+		const newSong = await song.save();
+		res.status(201).json(newSong);
+	} catch (e) {
+		res.status(400).json({ message: e.message });
+	}
+})
+// Updating one
+router.patch('/:id', getSong, async (req, res) => {
+	if (res.song.name != null) {
+		res.song.name = req.body.name
+	}
+	try {
+		const updatedSong = await res.song.save();
+		res.json(updatedSong)
+	} catch (e) {
+		res.status(400).json({ message: e.message })
+	}
+})
+// Deleting one
+router.delete('/:id', getSong, async (req, res) => {
+	try {
+		await res.song.remove();
+		res.json({ message: 'Song was deleted' });
+	} catch (e) {
+		res.status(500).json({ message: e.message })
+	}
+})
+
+async function getSong(req, res, next) {
+	let song;
+	try {
+		song = await Song.findById(req.params.id);
+		if (song == null) {
+			res.status(404).json({ message: 'Cannot find song' });
+		}
+	} catch (e) {
+		return res.status(500).json({ message: e.message });
+	}
+
+	res.song = song;
+	next();
+}
+
+module.exports = router;
