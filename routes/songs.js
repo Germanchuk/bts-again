@@ -32,9 +32,12 @@ router.post('/', async (req, res) => {
 })
 // Updating one
 router.patch('/:id', getSong, async (req, res) => {
-	if (res.song.name != null) {
-		res.song.name = req.body.name
-	}
+
+	res.song.name = req.body.name;
+	res.song.bpm = req.body.bpm;
+	res.song.key = req.body.key;
+	res.song.elements = req.body.elements;
+
 	try {
 		const updatedSong = await res.song.save();
 		res.json(updatedSong)
