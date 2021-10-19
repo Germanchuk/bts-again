@@ -17,9 +17,7 @@ router.get('/:id', getSong, (req, res) => {
 })
 // Creating one
 router.post('/', async (req, res) => {
-	const song = new Song({
-		name: req.body.name,
-	});
+	const song = new Song(res.body);
 	try {
 		const newSong = await song.save();
 		res.status(201).json(newSong);
@@ -29,9 +27,9 @@ router.post('/', async (req, res) => {
 })
 // Updating one
 router.patch('/:id', getSong, async (req, res) => {
-	if (res.song.name != null) {
-		res.song.name = req.body.name
-	}
+
+	res.song = req.body
+
 	try {
 		const updatedSong = await res.song.save();
 		res.json(updatedSong)
